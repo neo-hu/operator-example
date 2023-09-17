@@ -1,0 +1,19 @@
+apiVersion: web.tsdb.top/v1
+kind: Frontend
+metadata:
+  labels:
+    app.kubernetes.io/name: frontend
+    app.kubernetes.io/instance: frontend-sample
+  name: frontend-sample
+spec:
+  #image: registry.tsdb.top:5000/api-example:latest
+  image: registry.monitor.sina.com.cn:5000/api-example:latest
+  nodeSelector:
+    node-role.kubernetes.io/test: ''
+  backup:
+    schedule: 30 2 * * *
+    nfs:
+      path: /share
+      server: tsdb-copy1.sinawatch.nfs.chinaunicom-north-1.nas.nevis.sina.com.cn
+  config: |-
+    db: root:123qwe@tcp(0.0.0.0:3306)/test?charset=utf8&loc=Local&parseTime=true

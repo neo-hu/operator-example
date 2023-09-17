@@ -1,0 +1,90 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.11.1
+  creationTimestamp: null
+  name: frontends.web.tsdb.top
+spec:
+  group: web.tsdb.top
+  names:
+    kind: Frontend
+    listKind: FrontendList
+    plural: frontends
+    singular: frontend
+  scope: Namespaced
+  versions:
+  - name: v1
+    schema:
+      openAPIV3Schema:
+        description: Frontend is the Schema for the frontends API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            properties:
+              backup:
+                properties:
+                  nfs:
+                    description: Represents an NFS mount that lasts the lifetime of
+                      a pod. NFS volumes do not support ownership management or SELinux
+                      relabeling.
+                    properties:
+                      path:
+                        description: 'path that is exported by the NFS server. More
+                          info: https://kubernetes.io/docs/concepts/storage/volumes#nfs'
+                        type: string
+                      readOnly:
+                        description: 'readOnly here will force the NFS export to be
+                          mounted with read-only permissions. Defaults to false. More
+                          info: https://kubernetes.io/docs/concepts/storage/volumes#nfs'
+                        type: boolean
+                      server:
+                        description: 'server is the hostname or IP address of the
+                          NFS server. More info: https://kubernetes.io/docs/concepts/storage/volumes#nfs'
+                        type: string
+                    required:
+                    - path
+                    - server
+                    type: object
+                  schedule:
+                    type: string
+                required:
+                - nfs
+                type: object
+              config:
+                type: string
+              image:
+                type: string
+              nodeSelector:
+                additionalProperties:
+                  type: string
+                type: object
+            required:
+            - image
+            - nodeSelector
+            type: object
+          status:
+            properties:
+              lastBackupStatus:
+                type: string
+              lastScheduleTime:
+                format: date-time
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
